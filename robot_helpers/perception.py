@@ -1,0 +1,28 @@
+import numpy as np
+
+
+class CameraIntrinsic:
+    def __init__(self, height, width, fx, fy, cx, cy):
+        self.height = height
+        self.width = width
+        self.K = np.array([[fx, 0.0, cx], [0.0, fy, cy], [0.0, 0.0, 1.0]])
+
+    @property
+    def fx(self):
+        return self.K[0, 0]
+
+    @property
+    def fy(self):
+        return self.K[1, 1]
+
+    @property
+    def vfov(self):
+        return 2.0 * np.arctan(self.height / (2.0 * self.fy))
+
+    @property
+    def cx(self):
+        return self.K[0, 2]
+
+    @property
+    def cy(self):
+        return self.K[1, 2]
