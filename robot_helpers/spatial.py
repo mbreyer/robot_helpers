@@ -35,6 +35,9 @@ class Transform:
         translation = -rotation.apply(self.translation)
         return self.__class__(rotation, translation)
 
+    def apply(self, point):
+        return self.rotation.apply(point) + self.translation
+
     @classmethod
     def translation(cls, translation):
         rotation = Rotation.identity()
