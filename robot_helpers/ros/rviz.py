@@ -20,6 +20,10 @@ def create_line_strip_marker(frame, pose, scale, color, points, ns="", id=0):
     return marker
 
 
+def create_sphere_marker(frame, pose, scale, color, ns="", id=0):
+    return create_marker(Marker.SPHERE, frame, pose, scale, color, ns, id)
+
+
 def create_sphere_list_marker(frame, pose, scale, color, centers, ns="", id=0):
     marker = create_marker(Marker.SPHERE_LIST, frame, pose, scale, color, ns, id)
     marker.points = [to_point_msg(center) for center in centers]
