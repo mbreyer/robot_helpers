@@ -10,7 +10,7 @@ from robot_helpers.spatial import Rotation, Transform
 
 def from_camera_info_msg(msg):
     fx, fy, cx, cy = msg.K[0], msg.K[4], msg.K[2], msg.K[5]
-    return CameraIntrinsic(msg.height, msg.width, fx, fy, cx, cy)
+    return CameraIntrinsic(msg.width, msg.height, fx, fy, cx, cy)
 
 
 def from_point_msg(msg):

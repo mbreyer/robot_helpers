@@ -2,9 +2,9 @@ import numpy as np
 
 
 class CameraIntrinsic:
-    def __init__(self, height, width, fx, fy, cx, cy):
-        self.height = height
+    def __init__(self, width, height, fx, fy, cx, cy):
         self.width = width
+        self.height = height
         self.K = np.array([[fx, 0.0, cx], [0.0, fy, cy], [0.0, 0.0, 1.0]])
 
     @property

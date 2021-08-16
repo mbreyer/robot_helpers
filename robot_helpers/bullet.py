@@ -83,7 +83,7 @@ class BtCamera:
         renderer=p.ER_BULLET_HARDWARE_OPENGL,
     ):
         f, cx, cy = height / (2.0 * np.tan(vfov / 2.0)), width / 2.0, height / 2.0
-        self.intrinsic = CameraIntrinsic(height, width, f, f, cx, cy)
+        self.intrinsic = CameraIntrinsic(width, height, f, f, cx, cy)
         self.near = near
         self.far = far
         fov, aspect = np.rad2deg(vfov), width / height
