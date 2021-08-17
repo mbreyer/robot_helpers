@@ -18,6 +18,12 @@ def _init_broadcaster():
     _broadcaster = tf2_ros.TransformBroadcaster()
 
 
+def init():
+    _init_listener()
+    _init_broadcaster()
+    rospy.sleep(1.0)  # wait for connections to be established
+
+
 def lookup(target_frame, source_frame, time=rospy.Time(0), timeout=rospy.Duration(1.0)):
     if not _listener:
         _init_listener()
