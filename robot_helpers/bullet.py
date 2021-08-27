@@ -80,6 +80,7 @@ class BtCamera:
         far,
         body_uid=None,
         link_id=None,
+        calib_error=Transform.identity(),
         renderer=p.ER_BULLET_HARDWARE_OPENGL,
     ):
         f, cx, cy = height / (2.0 * np.tan(vfov / 2.0)), width / 2.0, height / 2.0
@@ -90,12 +91,14 @@ class BtCamera:
         self.proj_mat = p.computeProjectionMatrixFOV(fov, aspect, near, far)
         self.body_uid = body_uid
         self.link_id = link_id
+        self.calib_error = calib_error
         self.renderer = renderer
 
     def get_image(self, pose=None):
         if pose is None:
             r = p.getLinkState(self.body_uid, self.link_id, computeForwardKinematics=1)
             pose = Transform(Rotation.from_quat(r[5]), r[4])
+        pose *= self.calib_error
         R, t = pose.rotation, pose.translation
         view_mat = p.computeViewMatrix(t, R.apply([0, 0, 1]) + t, R.apply([0, -1, 0]))
         result = p.getCameraImage(
