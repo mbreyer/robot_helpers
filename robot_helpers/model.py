@@ -33,8 +33,7 @@ class Model:
         linear, angular = np.r_[d[0], d[1], d[2]], np.r_[d[3], d[4], d[5]]
         return linear, angular
 
-    def jacobian(self, frame, q):
-        # TODO passing link_index to jac_solver throws an error
+    def jacobian(self, q):
         jnt_array = joint_list_to_kdl(q)
         J = kdl.Jacobian(self.chain.getNrOfJoints())
         self.jac_solver.JntToJac(jnt_array, J)

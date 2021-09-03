@@ -33,6 +33,12 @@ def from_transform_msg(msg):
     return Transform(rotation, translation)
 
 
+def from_twist_msg(msg):
+    linear = from_vector3_msg(msg.linear)
+    angular = from_vector3_msg(msg.angular)
+    return np.r_[linear, angular]
+
+
 def from_vector3_msg(msg):
     return np.r_[msg.x, msg.y, msg.z]
 
@@ -98,6 +104,13 @@ def to_transform_stamped_msg(transform, target_frame, source_frame):
     msg.header.frame_id = target_frame
     msg.child_frame_id = source_frame
     msg.transform = to_transform_msg(transform)
+    return msg
+
+
+def to_twist_msg(dx):
+    msg = geometry_msgs.msg.Twist()
+    msg.linear = to_vector3_msg(dx[:3])
+    msg.angular = to_vector3_msg(dx[3:])
     return msg
 
 
