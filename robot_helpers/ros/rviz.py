@@ -9,7 +9,7 @@ def create_cube_marker(frame, pose, scale, color, ns="", id=0):
 
 
 def create_line_list_marker(frame, pose, scale, color, lines, ns="", id=0):
-    marker = create_marker(Marker.LINE_STRIP, frame, pose, scale, color, ns, id)
+    marker = create_marker(Marker.LINE_LIST, frame, pose, scale, color, ns, id)
     marker.points = [to_point_msg(point) for line in lines for point in line]
     return marker
 
