@@ -13,7 +13,7 @@ class MoveItClient:
         self.move_group = moveit_commander.MoveGroupCommander(self.planning_group)
 
     def goto(self, target, velocity_scaling=0.2, acceleration_scaling=0.2):
-        plan = self.plan(target, velocity_scaling, acceleration_scaling)
+        _, plan = self.plan(target, velocity_scaling, acceleration_scaling)
         success = self.execute(plan)
         return success
 
@@ -30,9 +30,8 @@ class MoveItClient:
         else:
             raise ValueError
 
-        plan = self.move_group.plan()[1]
-
-        return plan
+        success, plan, _, _ = self.move_group.plan()
+        return success, plan
 
     def execute(self, plan):
         success = self.move_group.execute(plan, wait=True)
