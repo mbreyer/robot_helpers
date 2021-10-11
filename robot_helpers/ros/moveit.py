@@ -1,7 +1,8 @@
 import moveit_commander
+from moveit_msgs.msg import CollisionObject
 import numpy as np
 
-from robot_helpers.ros.conversions import to_pose_msg
+from robot_helpers.ros.conversions import to_mesh_msg, to_pose_msg
 from robot_helpers.spatial import Transform
 
 
@@ -38,3 +39,25 @@ class MoveItClient:
         self.move_group.stop()
         self.move_group.clear_pose_targets()
         return success
+
+
+def create_collision_object_from_mesh(name, frame, pose, mesh):
+    co = CollisionObject()
+    co.operation = CollisionObject.ADD
+    co.id = name
+    co.header.frame_id = frame
+    co.meshes = [to_mesh_msg(mesh)]
+    co.mesh_poses = [to_pose_msg(pose)]
+    return co
+
+
+def create_collision_object_from_meshes(name, frame, poses, meshes):
+    if poses is not list:
+        poses = [poses] * len(meshes)
+    co = CollisionObject()
+    co.operation = CollisionObject.ADD
+    co.id = name
+    co.header.frame_id = frame
+    co.meshes = [to_mesh_msg(mesh) for mesh in meshes]
+    co.mesh_poses = [to_pose_msg(pose) for pose in poses]
+    return co

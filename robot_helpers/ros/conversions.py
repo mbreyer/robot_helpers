@@ -2,6 +2,7 @@ import numpy as np
 
 import geometry_msgs.msg
 import sensor_msgs.msg
+from shape_msgs.msg import Mesh, MeshTriangle
 import std_msgs.msg
 
 from robot_helpers.perception import CameraIntrinsic
@@ -57,6 +58,15 @@ def to_color_msg(color):
     msg.g = color[1]
     msg.b = color[2]
     msg.a = color[3] if len(color) == 4 else 1.0
+    return msg
+
+
+def to_mesh_msg(mesh):
+    triangles = np.asarray(mesh.triangles)
+    vertices = np.asarray(mesh.vertices)
+    msg = Mesh()
+    msg.triangles = [MeshTriangle(vertex_indices=triangle) for triangle in triangles]
+    msg.vertices = [to_point_msg(vertex) for vertex in vertices]
     return msg
 
 
