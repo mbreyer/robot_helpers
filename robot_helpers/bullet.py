@@ -54,15 +54,23 @@ class BtPandaGripper:
         )
         p.changeConstraint(uid, gearRatio=-1, erp=0.1, maxForce=50)
 
-    def set_desired_width(self, width):
-        for i in [9, 10]:
-            p.setJointMotorControl2(
-                self.uid,
-                i,
-                p.POSITION_CONTROL,
-                0.5 * width,
-                force=10,
-            )
+    def set_desired_width(self, width, force=5):
+        p.setJointMotorControlArray(
+            self.uid,
+            [9, 10],
+            p.POSITION_CONTROL,
+            [0.5 * width] * 2,
+            forces=[force] * 2,
+        )
+
+    def set_desired_speed(self, speed, force=5):
+        p.setJointMotorControlArray(
+            self.uid,
+            [9, 10],
+            p.VELOCITY_CONTROL,
+            targetVelocities=[speed] * 2,
+            forces=[force] * 2,
+        )
 
     def read(self):
         left_pos = p.getJointState(self.uid, 9)[0]
