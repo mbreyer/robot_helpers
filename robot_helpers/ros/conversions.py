@@ -62,11 +62,9 @@ def to_color_msg(color):
 
 
 def to_mesh_msg(mesh):
-    triangles = np.asarray(mesh.triangles)
-    vertices = np.asarray(mesh.vertices)
     msg = Mesh()
-    msg.triangles = [MeshTriangle(vertex_indices=triangle) for triangle in triangles]
-    msg.vertices = [to_point_msg(vertex) for vertex in vertices]
+    msg.triangles = [MeshTriangle(vertex_indices=triangle) for triangle in mesh.faces]
+    msg.vertices = [to_point_msg(vertex) for vertex in mesh.vertices]
     return msg
 
 
