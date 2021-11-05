@@ -13,7 +13,6 @@ class KDLModel:
         self.urdf = urdf
         self.root = root_frame
         self.tip = tip_frame
-        self.parse_urdf()
         self.init_kdl_solvers()
 
     @classmethod
@@ -26,28 +25,11 @@ class KDLModel:
         urdf = urdf_parser_py.urdf.URDF.from_parameter_server()
         return cls(urdf, root_frame, tip_frame)
 
-    def parse_urdf(self):
-        self.q_min = []
-        self.q_max = []
-        jnt_names = self.urdf.get_chain(self.root, self.tip, links=False, fixed=False)
-        for name in jnt_names:
-            jnt = self.urdf.joint_map[name]
-            self.q_min.append(jnt.limit.lower)
-            self.q_max.append(jnt.limit.upper)
-
     def init_kdl_solvers(self):
         _, tree = kdl_parser_py.urdf.treeFromUrdfModel(self.urdf)
         self.chain = tree.getChain(self.root, self.tip)
         self.fk_pos_solver = kdl.ChainFkSolverPos_recursive(self.chain)
         self.fk_vel_solver = kdl.ChainFkSolverVel_recursive(self.chain)
-        self.ik_vel_solver = kdl.ChainIkSolverVel_pinv(self.chain)
-        self.ik_pos_solver = kdl.ChainIkSolverPos_NR_JL(
-            self.chain,
-            joints_to_kdl_jnt_array(self.q_min),
-            joints_to_kdl_jnt_array(self.q_max),
-            self.fk_pos_solver,
-            self.ik_vel_solver,
-        )
         self.jac_solver = kdl.ChainJntToJacSolver(self.chain)
 
     def pose(self, frame, q):
@@ -74,13 +56,6 @@ class KDLModel:
         self.jac_solver.JntToJac(jnt_array, J)
         return kdl_mat_to_array(J)
 
-    def ik(self, q_init, pose):
-        q_init_kdl = joints_to_kdl_jnt_array(q_init)
-        kdl_frame = transform_to_kdl_frame(pose)
-        q_dkl = kdl.JntArray(len(q_init))
-        res = self.ik_pos_solver.CartToJnt(q_init_kdl, kdl_frame, q_dkl)
-        return kdl_jnt_array_to_joints(q_dkl) if res == 0 else None
-
     def _get_link_index(self, frame):
         return self.urdf.links.index(self.urdf.link_map[frame])
 
@@ -90,17 +65,6 @@ def joints_to_kdl_jnt_array(q):
     for i, q_i in enumerate(q):
         jnt_array[i] = q_i
     return jnt_array
-
-
-def kdl_jnt_array_to_joints(q):
-    return np.asarray([q[i] for i in range(q.rows())])
-
-
-def transform_to_kdl_frame(tf):
-    q, t = tf.rotation.as_quat(), tf.translation
-    p = kdl.Vector(t[0], t[1], t[2])
-    M = kdl.Rotation.Quaternion(q[0], q[1], q[2], q[2])
-    return kdl.Frame(M, p)
 
 
 def kdl_frame_to_transform(f):
