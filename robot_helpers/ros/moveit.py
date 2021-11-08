@@ -13,12 +13,12 @@ class MoveItClient:
         self.scene = moveit_commander.PlanningSceneInterface()
         self.move_group = moveit_commander.MoveGroupCommander(self.planning_group)
 
-    def goto(self, target, velocity_scaling=0.2, acceleration_scaling=0.2):
+    def goto(self, target, velocity_scaling=0.1, acceleration_scaling=0.1):
         _, plan = self.plan(target, velocity_scaling, acceleration_scaling)
         success = self.execute(plan)
         return success
 
-    def plan(self, target, velocity_scaling=1.0, acceleration_scaling=1.0):
+    def plan(self, target, velocity_scaling=0.1, acceleration_scaling=0.1):
         self.move_group.set_max_velocity_scaling_factor(velocity_scaling)
         self.move_group.set_max_acceleration_scaling_factor(acceleration_scaling)
 
@@ -39,7 +39,7 @@ class MoveItClient:
         success = self.execute(plan)
         return success
 
-    def planL(self, target, velocity_scaling=1.0, acceleration_scaling=1.0):
+    def planL(self, target, velocity_scaling=0.1, acceleration_scaling=0.1):
         waypoints = [to_pose_msg(target)]
         plan, _ = self.move_group.compute_cartesian_path(waypoints, 0.01, 0.0)
         state = self.robot.get_current_state()
