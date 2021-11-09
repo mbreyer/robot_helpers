@@ -1,11 +1,13 @@
+import copy
+
 import numpy as np
 from scipy.spatial.transform import Rotation
 
 
 class Transform:
     def __init__(self, rotation, translation):
-        self.rotation = rotation
-        self.translation = np.asarray(translation, np.double)
+        self.rotation = copy.deepcopy(rotation)
+        self.translation = np.asarray(translation, np.double).copy()
 
     @classmethod
     def from_matrix(cls, m):
