@@ -41,16 +41,6 @@ class Transform:
         return self.rotation.apply(point) + self.translation
 
     @classmethod
-    def rotation(cls, rotation):
-        translation = np.zeros(3)
-        return cls(rotation, translation)
-
-    @classmethod
-    def translation(cls, translation):
-        rotation = Rotation.identity()
-        return cls(rotation, translation)
-
-    @classmethod
     def R(cls, rotation):
         translation = np.zeros(3)
         return cls(rotation, translation)
