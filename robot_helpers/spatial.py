@@ -41,17 +41,29 @@ class Transform:
         return self.rotation.apply(point) + self.translation
 
     @classmethod
-    def R(cls, rotation):
-        translation = np.zeros(3)
-        return cls(rotation, translation)
-
-    @classmethod
-    def t(cls, translation):
-        rotation = Rotation.identity()
-        return cls(rotation, translation)
-
-    @classmethod
     def identity(cls):
         rotation = Rotation.identity()
         translation = np.array([0.0, 0.0, 0.0])
         return cls(rotation, translation)
+
+    @classmethod
+    def from_rotation(cls, rotation):
+        translation = np.zeros(3)
+        return cls(rotation, translation)
+
+    @classmethod
+    def from_translation(cls, translation):
+        rotation = Rotation.identity()
+        return cls(rotation, translation)
+
+    class TClass:
+        """
+        Simple way to create a pure translation.
+
+        Transform.t_[x, y, z] is equivalent to Transform.from_translation(np.r_[x, y, z]).
+        """
+
+        def __getitem__(self, key):
+            return Transform.from_translation(np.r_[key])
+
+    t_ = TClass()
