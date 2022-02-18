@@ -1,5 +1,5 @@
 import rospy
-from visualization_msgs.msg import Marker, MarkerArray
+from visualization_msgs.msg import Marker
 
 from .conversions import *
 

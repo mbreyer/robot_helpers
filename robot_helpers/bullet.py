@@ -8,14 +8,14 @@ assert p.isNumpyEnabled(), "Pybullet needs to be built with NumPy"
 
 
 class BtPandaArm:
-    def __init__(self, urdf_path="franka_panda/panda.urdf", x0=Transform.identity()):
+    def __init__(self, urdf_path="franka_panda/panda.urdf", pose=Transform.identity()):
         self.base_frame = "panda_link0"
         self.ee_frame = "panda_hand"
         self.configurations = {"ready": [0.0, -0.79, 0.0, -2.356, 0.0, 1.57, 0.79]}
         self.uid = p.loadURDF(
             str(urdf_path),
-            basePosition=x0.translation,
-            baseOrientation=x0.rotation.as_quat(),
+            basePosition=pose.translation,
+            baseOrientation=pose.rotation.as_quat(),
             useFixedBase=True,
         )
         for i, q_i in enumerate(self.configurations["ready"]):

@@ -10,6 +10,16 @@ class Transform:
         self.translation = np.asarray(translation, np.double).copy()
 
     @classmethod
+    def from_rotation(cls, rotation):
+        translation = np.zeros(3)
+        return cls(rotation, translation)
+
+    @classmethod
+    def from_translation(cls, translation):
+        rotation = Rotation.identity()
+        return cls(rotation, translation)
+
+    @classmethod
     def from_matrix(cls, m):
         rotation = Rotation.from_matrix(m[:3, :3])
         translation = m[:3, 3]
@@ -46,19 +56,9 @@ class Transform:
         translation = np.array([0.0, 0.0, 0.0])
         return cls(rotation, translation)
 
-    @classmethod
-    def from_rotation(cls, rotation):
-        translation = np.zeros(3)
-        return cls(rotation, translation)
-
-    @classmethod
-    def from_translation(cls, translation):
-        rotation = Rotation.identity()
-        return cls(rotation, translation)
-
     class TClass:
         """
-        Simple way to create a pure translation.
+        Convenient way to create a pure translation.
 
         Transform.t_[x, y, z] is equivalent to Transform.from_translation(np.r_[x, y, z]).
         """
