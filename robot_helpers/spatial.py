@@ -67,3 +67,20 @@ class Transform:
             return Transform.from_translation(np.r_[key])
 
     t_ = TClass()
+
+
+def look_at(eye, center, up):
+    eye = np.asarray(eye)
+    center = np.asarray(center)
+    forward = center - eye
+    forward /= np.linalg.norm(forward)
+    right = np.cross(forward, up)
+    right /= np.linalg.norm(right)
+    up = np.asarray(up) / np.linalg.norm(up)
+    up = np.cross(right, forward)
+    m = np.eye(4, 4)
+    m[:3, 0] = right
+    m[:3, 1] = -up
+    m[:3, 2] = forward
+    m[:3, 3] = eye
+    return Transform.from_matrix(m)
