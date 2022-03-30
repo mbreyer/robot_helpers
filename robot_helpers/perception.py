@@ -1,4 +1,5 @@
 import numpy as np
+import open3d as o3d
 
 
 class CameraIntrinsic:
@@ -26,3 +27,8 @@ class CameraIntrinsic:
     @property
     def cy(self):
         return self.K[1, 2]
+
+    def to_o3d(self):
+        return o3d.camera.PinholeCameraIntrinsic(
+            self.width, self.height, self.fx, self.fy, self.cx, self.cy
+        )
