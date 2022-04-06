@@ -61,10 +61,11 @@ MOVE_AXIS = InteractiveMarkerControl.MOVE_AXIS
 ROTATE_AXIS = InteractiveMarkerControl.ROTATE_AXIS
 
 
-def create_6dof_im(frame, name, scale, markers):
+def create_6dof_im(frame, name, pose, scale, markers):
     im = InteractiveMarker()
     im.header.frame_id = frame
     im.name = name
+    im.pose = to_pose_msg(pose)
     im.scale = scale
     im.controls = [
         InteractiveMarkerControl(markers=markers, always_visible=True),
