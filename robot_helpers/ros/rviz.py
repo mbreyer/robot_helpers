@@ -5,6 +5,13 @@ from visualization_msgs.msg import *
 from .conversions import *
 
 
+def create_arrow_marker(frame, start, end, scale, color, ns="", id=0):
+    pose = Transform.identity()
+    marker = create_marker(Marker.ARROW, frame, pose, scale, color, ns, id)
+    marker.points = [to_point_msg(start), to_point_msg(end)]
+    return marker
+
+
 def create_cube_marker(frame, pose, scale, color, ns="", id=0):
     return create_marker(Marker.CUBE, frame, pose, scale, color, ns, id)
 
