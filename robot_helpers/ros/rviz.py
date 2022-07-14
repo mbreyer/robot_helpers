@@ -45,11 +45,11 @@ def create_mesh_marker(frame, mesh, pose, scale=None, color=None, ns="", id=0):
 
 
 def create_marker(type, frame, pose, scale=None, color=None, ns="", id=0):
-    if not scale:
+    if scale is None:
         scale = [1, 1, 1]
     elif np.isscalar(scale):
         scale = [scale, scale, scale]
-    if not color:
+    if color is None:
         color = (1, 1, 1)
     msg = Marker()
     msg.header.frame_id = frame
