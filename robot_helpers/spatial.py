@@ -29,13 +29,33 @@ class Transform:
     def from_list(cls, l):
         return cls(Rotation.from_quat(l[:4]), l[4:])
 
-    def as_matrix(self):
-        return np.vstack(
-            (np.c_[self.rotation.as_matrix(), self.translation], [0.0, 0.0, 0.0, 1.0])
+    @classmethod
+    def identity(cls):
+        rotation = Rotation.identity()
+        translation = np.array([0.0, 0.0, 0.0])
+        return cls(rotation, translation)
+
+    @classmethod
+    def look_at(cls, eye, target, up):
+        forward = np.subtract(target, eye)
+        forward = np.divide(forward, np.linalg.norm(forward))
+
+        right = np.cross(forward, up)
+        right = np.divide(right, np.linalg.norm(right))
+
+        up = np.cross(right, forward)
+        up = np.divide(up, np.linalg.norm(up))
+
+        m = np.array(
+            [
+                [right[0], -up[0], forward[0], eye[0]],
+                [right[1], -up[1], forward[1], eye[1]],
+                [right[2], -up[2], forward[2], eye[2]],
+                [0.0, 0.0, 0.0, 1.0],
+            ]
         )
 
-    def to_list(self):
-        return np.r_[self.rotation.as_quat(), self.translation]
+        return cls.from_matrix(m)
 
     def __mul__(self, other):
         rotation = self.rotation * other.rotation
@@ -50,11 +70,16 @@ class Transform:
     def apply(self, point):
         return self.rotation.apply(point) + self.translation
 
-    @classmethod
-    def identity(cls):
-        rotation = Rotation.identity()
-        translation = np.array([0.0, 0.0, 0.0])
-        return cls(rotation, translation)
+    def as_matrix(self):
+        return np.vstack(
+            (
+                np.c_[self.rotation.as_matrix(), self.translation],
+                [0.0, 0.0, 0.0, 1.0],
+            )
+        )
+
+    def to_list(self):
+        return np.r_[self.rotation.as_quat(), self.translation]
 
     class TClass:
         """
