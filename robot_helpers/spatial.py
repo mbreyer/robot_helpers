@@ -41,6 +41,8 @@ class Transform:
         forward = np.divide(forward, np.linalg.norm(forward))
 
         right = np.cross(forward, up)
+        if np.linalg.norm(right) < 1e-3:
+            right = np.cross(forward, up + np.r_[1e-3, 0, 0])
         right = np.divide(right, np.linalg.norm(right))
 
         up = np.cross(right, forward)
